@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <!--
+    context: 用于指定生成代码的环境
+        id: 标识
+        targetRuntime: 运行时的目标
+            可选值：
+                MyBatis3Simple： 生成一个比较简单的CRUD的例子
+                MyBatis3: 生成一个比较复杂的例子——支持动态SQL
+    -->
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+
+        <!--
+        jdbcConnection: java数据库连接的设置
+
+        -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/mybatis-1"
+                        userId="root"
+                        password="123456">
+        </jdbcConnection>
+
+        <!--
+        javaTypeResolver: java类型转换器
+        -->
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!--
+        javaModelGenerator： 指定java Model生成位置，java实体类
+                targetPackage: 生成java实体类的位置
+                targetProject: 目标工程
+        -->
+        <javaModelGenerator targetPackage="com.ydgk.ssm.entities" targetProject="src">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+        <!--
+        sqlMapGenerator： 指定SQL映射文件生成的配置
+            targetPackage： 目标包
+            targetProject: 目标工程
+        -->
+        <sqlMapGenerator targetPackage="com.ydgk.ssm.mappers"  targetProject="sources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <!--
+        javaClientGenerator: 指定生成的接口的配置
+        -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.ydgk.ssm.mappers"  targetProject="src">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <!--
+        table 指定目标数据库中的表和java生成的策略
+            tableName: 表名
+            domainObjectName: 表对应实体类的名字
+        -->
+        <table tableName="admin" domainObjectName="Admin" ></table>
+        <table tableName="role" domainObjectName="Role" ></table>
+        <table tableName="infomation" domainObjectName="Infomation" ></table>
+        <table tableName="course" domainObjectName="Course" ></table>
+
+    </context>
+</generatorConfiguration>

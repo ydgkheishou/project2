@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/jms https://www.springframework.org/schema/jms/spring-jms.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+
+    <!--Spring的配置文件-->
+    <!--读取外部属性文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--1.配置自动扫描的包-->
+    <context:component-scan base-package="com.ydgk.ssm">
+        <!--让Spring的配置文件不扫描Controller和ControllerAdvice注解修饰的类-->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <!--2.配置dateSource数据源-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="${user}"/>
+        <property name="password" value="${userPassword}"/>
+        <property name="driverClass" value="${driverClass}"/>
+        <property name="jdbcUrl" value="${jdbcUrl}"/>
+    </bean>
+
+    <!--3.配置事务管理器-->
+    <bean id="dataSourceTransActionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" value="#{dataSource}"/>
+    </bean>
+
+   <!--4.基于注解的形式声明式事物,也就是开启事务的注解-->
+    <tx:annotation-driven transaction-manager="dataSourceTransActionManager"/>
+
+    <!--5.整合Mybatis-->
+    <!--配置mybatis-spring整合的SqlSessionFactoryBean-->
+    <bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" value="#{dataSource}"></property>
+
+        <!--指定核心配置文件的路径-->
+        <property name="configLocation" value="classpath:mybatis.xml"></property>
+
+        <!--注册Sql映射文件-->
+        <property name="mapperLocations" value="classpath:com/ydgk/ssm/mappers/*.xml"></property>
+    </bean>
+
+    <!--6.配置扫描mapper接口-->
+
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.ydgk.ssm.mappers"/>
+    </bean>
+</beans>
